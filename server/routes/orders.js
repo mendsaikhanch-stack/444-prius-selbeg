@@ -1,6 +1,5 @@
 import { Router } from 'express';
-import Order from '../models/Order.js';
-import Product from '../models/Product.js';
+import prisma from '../config/prisma.js';
 import { auth } from '../middleware/auth.js';
 import { admin } from '../middleware/admin.js';
 
@@ -15,18 +14,30 @@ router.post('/', async (req, res) => {
     }
 
     // Generate order ID
-    const count = await Order.countDocuments();
+    const count = await prisma.order.count();
     const orderId = `ORD-${String(count + 1).padStart(3, '0')}`;
 
     // Decrement stock for each item
     for (const item of items) {
       if (item.product) {
-        await Product.findByIdAndUpdate(item.product, { $inc: { stock: -item.qty } });
+        await prisma.product.update({
+          where: { id: item.product },
+          data: { stock: { decrement: item.qty } },
+        });
       }
     }
 
-    const order = await Order.create({
-      orderId, customer, phone, items, total, pay, delivery,
+    const order = await prisma.order.create({
+      data: {
+        orderId,
+        customer,
+        phone,
+        items: items || [],
+        total,
+        pay: pay || 'qpay',
+        date: new Date().toISOString().slice(0, 10),
+        delivery: delivery || undefined,
+      },
     });
 
     res.status(201).json(order);
@@ -38,7 +49,7 @@ router.post('/', async (req, res) => {
 // GET /api/orders (Admin)
 router.get('/', auth, admin, async (req, res) => {
   try {
-    const orders = await Order.find().sort({ createdAt: -1 });
+    const orders = await prisma.order.findMany({ orderBy: { createdAt: 'desc' } });
     res.json(orders);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -48,14 +59,13 @@ router.get('/', auth, admin, async (req, res) => {
 // PUT /api/orders/:id/status (Admin)
 router.put('/:id/status', auth, admin, async (req, res) => {
   try {
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { status: req.body.status },
-      { new: true }
-    );
-    if (!order) return res.status(404).json({ message: 'Order not found' });
+    const order = await prisma.order.update({
+      where: { id: req.params.id },
+      data: { status: req.body.status },
+    });
     res.json(order);
   } catch (err) {
+    if (err.code === 'P2025') return res.status(404).json({ message: 'Order not found' });
     res.status(400).json({ message: err.message });
   }
 });

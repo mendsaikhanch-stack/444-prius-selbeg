@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import ScheduledPost from '../models/ScheduledPost.js';
+import prisma from '../config/prisma.js';
 import { auth } from '../middleware/auth.js';
 import { admin } from '../middleware/admin.js';
 
@@ -8,7 +8,10 @@ const router = Router();
 // GET /api/scheduled-posts
 router.get('/', auth, admin, async (req, res) => {
   try {
-    const posts = await ScheduledPost.find().populate('product').sort({ date: -1 });
+    const posts = await prisma.scheduledPost.findMany({
+      include: { product: true },
+      orderBy: { date: 'desc' },
+    });
     res.json(posts);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -18,9 +21,17 @@ router.get('/', auth, admin, async (req, res) => {
 // POST /api/scheduled-posts
 router.post('/', auth, admin, async (req, res) => {
   try {
-    const post = await ScheduledPost.create(req.body);
-    const populated = await post.populate('product');
-    res.status(201).json(populated);
+    const post = await prisma.scheduledPost.create({
+      data: {
+        productId: req.body.product || req.body.productId,
+        time: req.body.time,
+        status: req.body.status || 'pending',
+        platforms: req.body.platforms || [],
+        date: req.body.date,
+      },
+      include: { product: true },
+    });
+    res.status(201).json(post);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -29,10 +40,19 @@ router.post('/', auth, admin, async (req, res) => {
 // PUT /api/scheduled-posts/:id
 router.put('/:id', auth, admin, async (req, res) => {
   try {
-    const post = await ScheduledPost.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate('product');
-    if (!post) return res.status(404).json({ message: 'Post not found' });
+    const data = { ...req.body };
+    if (data.product) {
+      data.productId = data.product;
+      delete data.product;
+    }
+    const post = await prisma.scheduledPost.update({
+      where: { id: req.params.id },
+      data,
+      include: { product: true },
+    });
     res.json(post);
   } catch (err) {
+    if (err.code === 'P2025') return res.status(404).json({ message: 'Post not found' });
     res.status(400).json({ message: err.message });
   }
 });
@@ -40,10 +60,10 @@ router.put('/:id', auth, admin, async (req, res) => {
 // DELETE /api/scheduled-posts/:id
 router.delete('/:id', auth, admin, async (req, res) => {
   try {
-    const post = await ScheduledPost.findByIdAndDelete(req.params.id);
-    if (!post) return res.status(404).json({ message: 'Post not found' });
+    await prisma.scheduledPost.delete({ where: { id: req.params.id } });
     res.json({ message: 'Post deleted' });
   } catch (err) {
+    if (err.code === 'P2025') return res.status(404).json({ message: 'Post not found' });
     res.status(500).json({ message: err.message });
   }
 });

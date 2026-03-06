@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String   @unique
+  password  String
+  isAdmin   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  name           ProductName
+  price          Float
+  model          String
+  cat            String
+  rating         Float           @default(0)
+  stock          Int             @default(0)
+  cond           String          @default("used")
+  img            String          @default("")
+  emoji          String          @default("")
+  desc           ProductDesc?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  scheduledPosts ScheduledPost[]
+}
+
+type ProductName {
+  mn String
+  en String
+}
+
+type ProductDesc {
+  mn String @default("")
+  en String @default("")
+}
+
+model Order {
+  id        String         @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String         @unique
+  customer  String
+  phone     String
+  items     OrderItem[]
+  total     Float
+  status    String         @default("new")
+  pay       String         @default("qpay")
+  date      String
+  delivery  OrderDelivery?
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+type OrderItem {
+  product String?        @db.ObjectId
+  name    OrderItemName?
+  emoji   String?
+  price   Float?
+  qty     Int?
+}
+
+type OrderItemName {
+  mn String?
+  en String?
+}
+
+type OrderDelivery {
+  method    String  @default("ub")
+  fee       Float   @default(0)
+  address   String?
+  district  String?
+  khoroo    String?
+  building  String?
+  apartment String?
+  note      String?
+  phone2    String?
+}
+
+model BusinessSettings {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  name          String   @default("444 Prius Сэлбэг Засвар")
+  phone         String   @default("8911-2722")
+  phone2        String   @default("9444-4444")
+  address       String   @default("УБ хот, Энх тайваны өргөн чөлөө")
+  branches      Branch[]
+  facebook      String   @default("")
+  instagram     String   @default("")
+  tiktok        String   @default("")
+  youtube       String   @default("")
+  fbPixelId     String   @default("")
+  fbPageId      String   @default("")
+  workHours     String   @default("Даваа-Бямба: 09:00-19:00")
+  bankName      String   @default("Хаан банк")
+  accountNo     String   @default("")
+  accountHolder String   @default("")
+  mapEmbed      String   @default("")
+  mapUrl        String   @default("")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+type Branch {
+  name    String?
+  phone   String?
+  address String?
+}
+
+model ScheduledPost {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId String   @db.ObjectId
+  product   Product  @relation(fields: [productId], references: [id])
+  time      String
+  status    String   @default("pending")
+  platforms String[]
+  date      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  key       String   @unique
+  icon      String   @default("")
+  price     String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

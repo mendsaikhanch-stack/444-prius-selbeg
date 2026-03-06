@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import prisma from '../config/prisma.js';
 
 export async function auth(req, res, next) {
   const header = req.headers.authorization;
@@ -8,8 +8,10 @@ export async function auth(req, res, next) {
   }
   try {
     const decoded = jwt.verify(header.split(' ')[1], process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id).select('-password');
-    if (!req.user) return res.status(401).json({ message: 'User not found' });
+    const user = await prisma.user.findUnique({ where: { id: decoded.id } });
+    if (!user) return res.status(401).json({ message: 'User not found' });
+    const { password, ...userWithoutPassword } = user;
+    req.user = userWithoutPassword;
     next();
   } catch {
     res.status(401).json({ message: 'Invalid token' });

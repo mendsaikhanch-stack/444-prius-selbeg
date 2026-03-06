@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import bcrypt from 'bcryptjs';
+import prisma from '../config/prisma.js';
 import { auth } from '../middleware/auth.js';
 
 const router = Router();
@@ -16,14 +17,17 @@ router.post('/register', async (req, res) => {
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'All fields required' });
     }
-    const exists = await User.findOne({ email });
+    const exists = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
     if (exists) return res.status(400).json({ message: 'Email already registered' });
 
-    const user = await User.create({ name, email, password });
-    const token = signToken(user._id);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await prisma.user.create({
+      data: { name, email: email.toLowerCase(), password: hashedPassword },
+    });
+    const token = signToken(user.id);
     res.status(201).json({
       token,
-      user: { _id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin },
+      user: { _id: user.id, name: user.name, email: user.email, isAdmin: user.isAdmin },
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -34,14 +38,14 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user || !(await user.matchPassword(password))) {
+    const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
-    const token = signToken(user._id);
+    const token = signToken(user.id);
     res.json({
       token,
-      user: { _id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin },
+      user: { _id: user.id, name: user.name, email: user.email, isAdmin: user.isAdmin },
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -50,7 +54,7 @@ router.post('/login', async (req, res) => {
 
 // GET /api/auth/me
 router.get('/me', auth, (req, res) => {
-  res.json({ _id: req.user._id, name: req.user.name, email: req.user.email, isAdmin: req.user.isAdmin });
+  res.json({ _id: req.user.id, name: req.user.name, email: req.user.email, isAdmin: req.user.isAdmin });
 });
 
 export default router;

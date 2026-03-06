@@ -1,17 +1,12 @@
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import bcrypt from 'bcryptjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
-import User from '../models/User.js';
-import Product from '../models/Product.js';
-import Order from '../models/Order.js';
-import BusinessSettings from '../models/BusinessSettings.js';
-import ScheduledPost from '../models/ScheduledPost.js';
-import Service from '../models/Service.js';
+import prisma from '../config/prisma.js';
 
 const products = [
   {name:{mn:"Hybrid батерей",en:"Hybrid Battery"},price:850000,model:"Prius 20",cat:"Батерей",rating:4.9,stock:2,cond:"used",img:"https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=400&h=400&fit=crop",emoji:"🔋",desc:{mn:"Япон задаргааны hybrid батерей",en:"Japanese hybrid battery"}},
@@ -65,64 +60,78 @@ const services = [
 
 async function seed() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('Connected to MongoDB');
+    console.log('Connected to database via Prisma');
 
-    // Clear existing data
+    // Clear existing data (delete dependent records first)
+    await prisma.scheduledPost.deleteMany();
+    await prisma.order.deleteMany();
     await Promise.all([
-      User.deleteMany(),
-      Product.deleteMany(),
-      Order.deleteMany(),
-      BusinessSettings.deleteMany(),
-      ScheduledPost.deleteMany(),
-      Service.deleteMany(),
+      prisma.user.deleteMany(),
+      prisma.product.deleteMany(),
+      prisma.businessSettings.deleteMany(),
+      prisma.service.deleteMany(),
     ]);
     console.log('Cleared existing data');
 
     // Create admin user
-    const admin = await User.create({
-      name: 'Admin',
-      email: 'admin@shop.mn',
-      password: 'admin123',
-      isAdmin: true,
+    const hashedPassword = await bcrypt.hash('admin123', 10);
+    const admin = await prisma.user.create({
+      data: {
+        name: 'Admin',
+        email: 'admin@shop.mn',
+        password: hashedPassword,
+        isAdmin: true,
+      },
     });
     console.log('Admin user created:', admin.email);
 
     // Create products
-    const createdProducts = await Product.insertMany(products);
+    const createdProducts = [];
+    for (const p of products) {
+      const product = await prisma.product.create({ data: p });
+      createdProducts.push(product);
+    }
     console.log(`${createdProducts.length} products created`);
 
     // Create mock orders referencing the created products
     const mockOrders = [
-      {orderId:"ORD-001",customer:"Батбаяр",phone:"9911-2233",items:[{product:createdProducts[0]._id,name:createdProducts[0].name,emoji:createdProducts[0].emoji,price:createdProducts[0].price,qty:1},{product:createdProducts[2]._id,name:createdProducts[2].name,emoji:createdProducts[2].emoji,price:createdProducts[2].price,qty:1}],total:900000,status:"new",date:"2026-02-25",pay:"qpay"},
-      {orderId:"ORD-002",customer:"Ганбаатар",phone:"8800-1122",items:[{product:createdProducts[7]._id,name:createdProducts[7].name,emoji:createdProducts[7].emoji,price:createdProducts[7].price,qty:1}],total:1200000,status:"processing",date:"2026-02-24",pay:"bank"},
-      {orderId:"ORD-003",customer:"Сарангэрэл",phone:"9900-3344",items:[{product:createdProducts[9]._id,name:createdProducts[9].name,emoji:createdProducts[9].emoji,price:createdProducts[9].price,qty:3}],total:245000,status:"delivered",date:"2026-02-23",pay:"cash"},
+      {orderId:"ORD-001",customer:"Батбаяр",phone:"9911-2233",items:[{product:createdProducts[0].id,name:createdProducts[0].name,emoji:createdProducts[0].emoji,price:createdProducts[0].price,qty:1},{product:createdProducts[2].id,name:createdProducts[2].name,emoji:createdProducts[2].emoji,price:createdProducts[2].price,qty:1}],total:900000,status:"new",date:"2026-02-25",pay:"qpay"},
+      {orderId:"ORD-002",customer:"Ганбаатар",phone:"8800-1122",items:[{product:createdProducts[7].id,name:createdProducts[7].name,emoji:createdProducts[7].emoji,price:createdProducts[7].price,qty:1}],total:1200000,status:"processing",date:"2026-02-24",pay:"bank"},
+      {orderId:"ORD-003",customer:"Сарангэрэл",phone:"9900-3344",items:[{product:createdProducts[9].id,name:createdProducts[9].name,emoji:createdProducts[9].emoji,price:createdProducts[9].price,qty:3}],total:245000,status:"delivered",date:"2026-02-23",pay:"cash"},
     ];
-    await Order.insertMany(mockOrders);
+    for (const o of mockOrders) {
+      await prisma.order.create({ data: o });
+    }
     console.log(`${mockOrders.length} orders created`);
 
     // Create business settings
-    await BusinessSettings.create(bizSettings);
+    await prisma.businessSettings.create({ data: bizSettings });
     console.log('Business settings created');
 
     // Create scheduled posts
     const scheduledPosts = [
-      {product:createdProducts[0]._id,time:"09:00",status:"posted",platforms:["facebook","instagram"],date:"2026-02-27"},
-      {product:createdProducts[7]._id,time:"13:00",status:"scheduled",platforms:["facebook","tiktok"],date:"2026-02-27"},
-      {product:createdProducts[1]._id,time:"18:00",status:"pending",platforms:["facebook","instagram","tiktok","youtube"],date:"2026-02-27"},
-      {product:createdProducts[12]._id,time:"09:00",status:"pending",platforms:["facebook","instagram"],date:"2026-02-28"},
+      {productId:createdProducts[0].id,time:"09:00",status:"posted",platforms:["facebook","instagram"],date:"2026-02-27"},
+      {productId:createdProducts[7].id,time:"13:00",status:"scheduled",platforms:["facebook","tiktok"],date:"2026-02-27"},
+      {productId:createdProducts[1].id,time:"18:00",status:"pending",platforms:["facebook","instagram","tiktok","youtube"],date:"2026-02-27"},
+      {productId:createdProducts[12].id,time:"09:00",status:"pending",platforms:["facebook","instagram"],date:"2026-02-28"},
     ];
-    await ScheduledPost.insertMany(scheduledPosts);
+    for (const sp of scheduledPosts) {
+      await prisma.scheduledPost.create({ data: sp });
+    }
     console.log(`${scheduledPosts.length} scheduled posts created`);
 
     // Create services
-    await Service.insertMany(services);
+    for (const s of services) {
+      await prisma.service.create({ data: s });
+    }
     console.log(`${services.length} services created`);
 
     console.log('\nSeed completed successfully!');
+    await prisma.$disconnect();
     process.exit(0);
   } catch (err) {
     console.error('Seed error:', err);
+    await prisma.$disconnect();
     process.exit(1);
   }
 }

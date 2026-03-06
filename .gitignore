@@ -6,3 +6,4 @@ screenshots
 server/node_modules
 server/.env
 server/uploads
+server/generated/prisma

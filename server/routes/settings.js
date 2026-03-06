@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import BusinessSettings from '../models/BusinessSettings.js';
+import prisma from '../config/prisma.js';
 import { auth } from '../middleware/auth.js';
 import { admin } from '../middleware/admin.js';
 
@@ -8,9 +8,9 @@ const router = Router();
 // GET /api/settings (public)
 router.get('/', async (req, res) => {
   try {
-    let settings = await BusinessSettings.findOne();
+    let settings = await prisma.businessSettings.findFirst();
     if (!settings) {
-      settings = await BusinessSettings.create({});
+      settings = await prisma.businessSettings.create({ data: {} });
     }
     res.json(settings);
   } catch (err) {
@@ -21,12 +21,14 @@ router.get('/', async (req, res) => {
 // PUT /api/settings (Admin)
 router.put('/', auth, admin, async (req, res) => {
   try {
-    let settings = await BusinessSettings.findOne();
+    let settings = await prisma.businessSettings.findFirst();
     if (!settings) {
-      settings = await BusinessSettings.create(req.body);
+      settings = await prisma.businessSettings.create({ data: req.body });
     } else {
-      Object.assign(settings, req.body);
-      await settings.save();
+      settings = await prisma.businessSettings.update({
+        where: { id: settings.id },
+        data: req.body,
+      });
     }
     res.json(settings);
   } catch (err) {
