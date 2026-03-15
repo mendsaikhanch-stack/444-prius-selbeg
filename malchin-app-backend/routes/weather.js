@@ -5,120 +5,114 @@ const axios = require("axios");
 const API_KEY = process.env.OPENWEATHER_API_KEY || "";
 
 // Монголын аймгуудын координат
-const AIMAG_COORDS = {
-  Arkhangai: { lat: 47.8611, lon: 100.7236, name: "Архангай" },
-  Bayankhongor: { lat: 46.1947, lon: 100.7181, name: "Баянхонгор" },
-  Bulgan: { lat: 48.8125, lon: 103.5347, name: "Булган" },
-  Dornod: { lat: 47.3170, lon: 115.7903, name: "Дорнод" },
-  Dundgobi: { lat: 45.7625, lon: 106.2644, name: "Дундговь" },
-  Gobi_Altai: { lat: 46.3725, lon: 96.2583, name: "Говь-Алтай" },
-  Khentii: { lat: 47.3178, lon: 109.6513, name: "Хэнтий" },
-  Khovd: { lat: 48.0056, lon: 91.6428, name: "Ховд" },
-  Khuvsgul: { lat: 49.3892, lon: 99.7250, name: "Хөвсгөл" },
-  Umnugobi: { lat: 43.5711, lon: 104.4250, name: "Өмнөговь" },
-  Selenge: { lat: 49.8900, lon: 106.1847, name: "Сэлэнгэ" },
-  Sukhbaatar: { lat: 46.6922, lon: 113.3858, name: "Сүхбаатар" },
-  Tuv: { lat: 47.7131, lon: 106.9528, name: "Төв" },
-  Uvs: { lat: 49.9847, lon: 92.0669, name: "Увс" },
-  Zavkhan: { lat: 48.2608, lon: 96.0703, name: "Завхан" },
-  Ulaanbaatar: { lat: 47.9214, lon: 106.9055, name: "Улаанбаатар" },
-};
-
-// Демо data (API key байхгүй үед)
-const demoData = {
-  Arkhangai: { temp: -5, feels_like: -10, wind: 3, humidity: 65, condition: "Clear", description: "Цэлмэг", snow: 0, dzud_risk: "low", forecast: [{ day: 1, temp_day: -3, temp_night: -12, condition: "Cloudy" }, { day: 2, temp_day: -8, temp_night: -18, condition: "Snow" }, { day: 3, temp_day: -12, temp_night: -22, condition: "Storm" }, { day: 4, temp_day: -7, temp_night: -15, condition: "Clear" }, { day: 5, temp_day: -4, temp_night: -13, condition: "Clear" }, { day: 6, temp_day: -2, temp_night: -10, condition: "Cloudy" }, { day: 7, temp_day: -5, temp_night: -14, condition: "Clear" }] },
-  Khuvsgul: { temp: -15, feels_like: -22, wind: 5, humidity: 75, condition: "Snow", description: "Цас", snow: 20, dzud_risk: "high", forecast: [{ day: 1, temp_day: -18, temp_night: -28, condition: "Snow" }, { day: 2, temp_day: -20, temp_night: -30, condition: "Storm" }, { day: 3, temp_day: -16, temp_night: -25, condition: "Cloudy" }, { day: 4, temp_day: -12, temp_night: -22, condition: "Clear" }, { day: 5, temp_day: -10, temp_night: -20, condition: "Clear" }, { day: 6, temp_day: -14, temp_night: -24, condition: "Snow" }, { day: 7, temp_day: -11, temp_night: -21, condition: "Cloudy" }] },
-  Umnugobi: { temp: 2, feels_like: -3, wind: 8, humidity: 25, condition: "Windy", description: "Салхитай", snow: 0, dzud_risk: "medium", forecast: [{ day: 1, temp_day: 0, temp_night: -10, condition: "Windy" }, { day: 2, temp_day: -3, temp_night: -12, condition: "Dust" }, { day: 3, temp_day: 1, temp_night: -8, condition: "Clear" }, { day: 4, temp_day: 4, temp_night: -6, condition: "Clear" }, { day: 5, temp_day: 2, temp_night: -9, condition: "Windy" }, { day: 6, temp_day: -1, temp_night: -11, condition: "Cloudy" }, { day: 7, temp_day: 3, temp_night: -7, condition: "Clear" }] },
-  Tuv: { temp: -3, feels_like: -7, wind: 2, humidity: 55, condition: "Cloudy", description: "Үүлэрхэг", snow: 5, dzud_risk: "low", forecast: [{ day: 1, temp_day: -2, temp_night: -11, condition: "Cloudy" }, { day: 2, temp_day: -5, temp_night: -14, condition: "Snow" }, { day: 3, temp_day: -1, temp_night: -10, condition: "Clear" }, { day: 4, temp_day: 0, temp_night: -9, condition: "Clear" }, { day: 5, temp_day: -3, temp_night: -12, condition: "Cloudy" }, { day: 6, temp_day: -4, temp_night: -13, condition: "Snow" }, { day: 7, temp_day: -2, temp_night: -11, condition: "Clear" }] },
+const COORDS = {
+  Ulaanbaatar: { lat: 47.92, lon: 106.91 },
+  Arkhangai: { lat: 47.86, lon: 100.72 },
+  Khuvsgul: { lat: 49.39, lon: 99.73 },
+  Umnugobi: { lat: 43.57, lon: 104.43 },
+  Tuv: { lat: 47.71, lon: 106.95 },
+  Dornod: { lat: 47.32, lon: 115.79 },
+  Khovd: { lat: 48.01, lon: 91.64 },
+  Khentii: { lat: 47.32, lon: 109.65 },
+  Bayankhongor: { lat: 46.19, lon: 100.72 },
+  Zavkhan: { lat: 48.26, lon: 96.07 },
+  Selenge: { lat: 49.89, lon: 106.18 },
+  Bulgan: { lat: 48.81, lon: 103.53 },
+  Uvs: { lat: 49.98, lon: 92.07 },
 };
 
 // Зудын эрсдэлийн тооцоо
-function calcDzudRisk(temp, wind, snow) {
-  let score = 0;
-  if (temp < -30) score += 4;
-  else if (temp < -20) score += 3;
-  else if (temp < -10) score += 2;
-  else if (temp < 0) score += 1;
-
-  if (wind > 15) score += 3;
-  else if (wind > 10) score += 2;
-  else if (wind > 5) score += 1;
-
-  if (snow > 30) score += 3;
-  else if (snow > 15) score += 2;
-  else if (snow > 5) score += 1;
-
-  if (score >= 8) return "very_high";
-  if (score >= 6) return "high";
-  if (score >= 4) return "medium";
+function dzudRisk(t, w, s) {
+  let sc = 0;
+  if (t < -30) sc += 4;
+  else if (t < -20) sc += 3;
+  else if (t < -10) sc += 2;
+  else if (t < 0) sc += 1;
+  if (w > 15) sc += 3;
+  else if (w > 10) sc += 2;
+  else if (w > 5) sc += 1;
+  if (s > 30) sc += 3;
+  else if (s > 15) sc += 2;
+  else if (s > 5) sc += 1;
+  if (sc >= 8) return "very_high";
+  if (sc >= 6) return "high";
+  if (sc >= 4) return "medium";
   return "low";
 }
 
-// One Call API 3.0 ашиглан бодит цаг агаар авах
-async function fetchRealWeather(aimag) {
-  const coords = AIMAG_COORDS[aimag];
-  if (!coords || !API_KEY) return null;
-
+// Одоогийн цаг агаар (API 2.5 - үнэгүй)
+async function fetchWeather(aimag) {
+  const c = COORDS[aimag];
+  if (!c || !API_KEY) return null;
   try {
-    const res = await axios.get(
-      `https://api.openweathermap.org/data/3.0/onecall?lat=${coords.lat}&lon=${coords.lon}&exclude=minutely,hourly&appid=${API_KEY}&units=metric&lang=mn`
+    const r = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${c.lat}&lon=${c.lon}&appid=${API_KEY}&units=metric&lang=mn`
     );
-
-    const d = res.data;
-    const current = d.current;
-    const snow = current.snow ? current.snow["1h"] || 0 : 0;
-
+    const d = r.data;
+    const snow = d.snow ? d.snow["1h"] || 0 : 0;
     return {
       aimag,
-      name: coords.name,
-      temp: Math.round(current.temp),
-      feels_like: Math.round(current.feels_like),
-      wind: current.wind_speed,
-      humidity: current.humidity,
-      condition: current.weather[0].main,
-      description: current.weather[0].description,
-      uvi: current.uvi,
+      temp: Math.round(d.main.temp),
+      feels_like: Math.round(d.main.feels_like),
+      temp_min: Math.round(d.main.temp_min),
+      temp_max: Math.round(d.main.temp_max),
+      wind: d.wind.speed,
+      humidity: d.main.humidity,
+      condition: d.weather[0].main,
+      description: d.weather[0].description,
+      icon: d.weather[0].icon,
       snow,
-      dzud_risk: calcDzudRisk(current.temp, current.wind_speed, snow),
-      source: "openweathermap_3.0",
-      forecast: d.daily.slice(0, 7).map((day, i) => ({
-        day: i + 1,
-        temp_day: Math.round(day.temp.day),
-        temp_night: Math.round(day.temp.night),
-        temp_min: Math.round(day.temp.min),
-        temp_max: Math.round(day.temp.max),
-        wind: day.wind_speed,
-        humidity: day.humidity,
-        condition: day.weather[0].main,
-        description: day.weather[0].description,
-        dzud_risk: calcDzudRisk(day.temp.min, day.wind_speed, day.snow || 0),
-      })),
-      alerts: d.alerts
-        ? d.alerts.map((a) => ({
-            event: a.event,
-            description: a.description,
-            start: new Date(a.start * 1000),
-            end: new Date(a.end * 1000),
-          }))
-        : [],
+      dzud_risk: dzudRisk(d.main.temp, d.wind.speed, snow),
+      source: "openweathermap",
     };
-  } catch (err) {
-    console.error("Weather API error:", err.response?.data?.message || err.message);
+  } catch (e) {
+    console.error("Weather error:", e.response ? e.response.data.message : e.message);
     return null;
   }
 }
 
-// Аймгийн цаг агаар
-router.get("/:aimag", async (req, res) => {
-  const aimag = req.params.aimag;
-
-  if (API_KEY) {
-    const real = await fetchRealWeather(aimag);
-    if (real) return res.json(real);
+// 5 хоногийн прогноз (API 2.5 - үнэгүй)
+async function fetchForecast(aimag) {
+  const c = COORDS[aimag];
+  if (!c || !API_KEY) return [];
+  try {
+    const r = await axios.get(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${c.lat}&lon=${c.lon}&appid=${API_KEY}&units=metric&lang=mn&cnt=40`
+    );
+    const daily = {};
+    r.data.list.forEach((item) => {
+      const date = item.dt_txt.split(" ")[0];
+      if (!daily[date]) daily[date] = { temps: [], winds: [], conditions: [], date };
+      daily[date].temps.push(item.main.temp);
+      daily[date].winds.push(item.wind.speed);
+      daily[date].conditions.push(item.weather[0].main);
+    });
+    return Object.values(daily)
+      .slice(0, 5)
+      .map((d, i) => ({
+        day: i + 1,
+        date: d.date,
+        temp_min: Math.round(Math.min(...d.temps)),
+        temp_max: Math.round(Math.max(...d.temps)),
+        wind: Math.round(Math.max(...d.winds)),
+        condition: d.conditions[Math.floor(d.conditions.length / 2)],
+        dzud_risk: dzudRisk(Math.min(...d.temps), Math.max(...d.winds), 0),
+      }));
+  } catch (e) {
+    return [];
   }
+}
 
-  const data = demoData[aimag] || demoData.Tuv;
-  res.json({ aimag, source: "demo", ...data });
+// Аймгийн цаг агаар + прогноз
+router.get("/:aimag", async (req, res) => {
+  if (API_KEY) {
+    const current = await fetchWeather(req.params.aimag);
+    if (current) {
+      const forecast = await fetchForecast(req.params.aimag);
+      return res.json({ ...current, forecast });
+    }
+  }
+  res.json({ aimag: req.params.aimag, source: "demo", temp: -3, wind: 2, condition: "Cloudy", dzud_risk: "low" });
 });
 
 // Бүх аймгийн товч мэдээ
@@ -126,29 +120,14 @@ router.get("/", async (req, res) => {
   if (API_KEY) {
     try {
       const results = await Promise.all(
-        Object.keys(AIMAG_COORDS).slice(0, 8).map(async (aimag) => {
-          const data = await fetchRealWeather(aimag);
-          if (data) {
-            return { aimag, name: data.name, temp: data.temp, condition: data.condition, dzud_risk: data.dzud_risk, source: "openweathermap_3.0" };
-          }
-          return { aimag, source: "demo", ...(demoData[aimag] || demoData.Tuv) };
-        })
+        Object.keys(COORDS).slice(0, 8).map((a) => fetchWeather(a))
       );
-      return res.json(results);
-    } catch (err) {
-      // fallback to demo
+      return res.json(results.filter((r) => r));
+    } catch (e) {
+      // fallback
     }
   }
-
-  res.json(
-    Object.keys(demoData).map((k) => ({
-      aimag: k,
-      temp: demoData[k].temp,
-      condition: demoData[k].condition,
-      dzud_risk: demoData[k].dzud_risk,
-      source: "demo",
-    }))
-  );
+  res.json([{ aimag: "Tuv", source: "demo", temp: -3, condition: "Cloudy", dzud_risk: "low" }]);
 });
 
 module.exports = router;
