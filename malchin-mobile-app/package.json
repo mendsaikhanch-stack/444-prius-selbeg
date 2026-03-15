@@ -1,0 +1,21 @@
+{
+  "name": "malchin-mobile-app",
+  "version": "1.0.0",
+  "main": "App.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios"
+  },
+  "dependencies": {
+    "expo": "~52.0.0",
+    "@react-navigation/native": "^7.0.0",
+    "@react-navigation/native-stack": "^7.0.0",
+    "@react-navigation/bottom-tabs": "^7.0.0",
+    "react": "18.3.1",
+    "react-native": "0.76.0",
+    "react-native-screens": "~4.0.0",
+    "react-native-safe-area-context": "4.12.0",
+    "axios": "^1.7.0"
+  }
+}
