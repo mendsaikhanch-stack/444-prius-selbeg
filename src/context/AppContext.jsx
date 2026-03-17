@@ -251,7 +251,7 @@ export function AppProvider({ children }) {
       }
       m.setAttribute("content", content);
     };
-    setMeta("og:title", "444 Prius Сэлбэг Засвар");
+    setMeta("og:title", BIZ.name);
     setMeta(
       "og:description",
       "Toyota Prius & Aqua — Япон ориг сэлбэг, мэргэжлийн засвар. ☎️ " +

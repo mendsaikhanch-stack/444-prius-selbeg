@@ -1,5 +1,5 @@
 export const T={mn:{
-brand:"444 Prius Сэлбэг Засвар",home:"Нүүр",parts:"Сэлбэг",services:"Засвар",gallery:"Зураг",contact:"Холбоо барих",
+brand:"Манай СӨХ",home:"Нүүр",parts:"Сэлбэг",services:"Засвар",gallery:"Зураг",contact:"Холбоо барих",
 addToCart:"Сагсанд нэмэх",yourCart:"Таны сагс",total:"Нийт",placeOrder:"Захиалга өгөх",cartEmpty:"Сагс хоосон",
 shipping:"Хүргэлт",payment:"Төлбөр",review:"Шалгах",confirmation:"Баталгаажуулалт",
 allModels:"Бүх загвар",price:"Үнэ",quantity:"Тоо",inStock:"Нөөцөд",
@@ -17,7 +17,7 @@ sortBy:"Эрэмбэлэх",priceLow:"Үнэ ↑",priceHigh:"Үнэ ↓",ratingH
 noProducts:"Олдсонгүй",clearFilters:"Цэвэрлэх",items:"ш",prev:"Өмнөх",next:"Дараах",
 computerDiag:"Компьютер оношлогоо",batteryService:"Батерей засвар",engineRepair:"Мотор засвар",
 suspensionRepair:"Явах эд анги",acService:"Кондишн",oilChange:"Тос солилт",callout:"Дуудлагын засвар",bodyRepair:"Кузов засвар",
-bankName:"Хаан банк",accountNo:"5012345678",accountHolder:"444 Prius ХХК",
+bankName:"Хаан банк",accountNo:"",accountHolder:"Манай СӨХ",
 qpayDesc:"QPay/SocialPay сканнер",installmentDesc:"3-12 сар хуваан төлөх",cashDesc:"Салбар дээр бэлнээр",
 fbPage:"Facebook",viewOnFb:"Facebook-д үзэх",new:"Шинэ",used:"Хуучин",
 login:"Нэвтрэх",logout:"Гарах",save:"Хадгалах",cancel:"Цуцлах",delete:"Устгах",
@@ -65,7 +65,7 @@ estimatedDelivery:"Хүрэх хугацаа",deliveryFree:"Үнэгүй",delive
 freeDeliveryOver:"100,000₮-с дээш захиалгад УБ хүргэлт үнэгүй",
 customer:"Захиалагч",date:"Огноо",
 },en:{
-brand:"444 Prius Parts & Service",home:"Home",parts:"Parts",services:"Services",gallery:"Gallery",contact:"Contact",
+brand:"My HOA",home:"Home",parts:"Parts",services:"Services",gallery:"Gallery",contact:"Contact",
 addToCart:"Add to Cart",yourCart:"Your Cart",total:"Total",placeOrder:"Place Order",cartEmpty:"Cart is empty",
 shipping:"Shipping",payment:"Payment",review:"Review",confirmation:"Confirmation",
 allModels:"All Models",price:"Price",quantity:"Qty",inStock:"In Stock",
@@ -83,7 +83,7 @@ sortBy:"Sort",priceLow:"Price ↑",priceHigh:"Price ↓",ratingHigh:"Rating ↓"
 noProducts:"No products",clearFilters:"Clear",items:"pcs",prev:"Prev",next:"Next",
 computerDiag:"Computer Diagnostics",batteryService:"Battery Service",engineRepair:"Engine Repair",
 suspensionRepair:"Suspension",acService:"AC Service",oilChange:"Oil Change",callout:"Callout",bodyRepair:"Body Repair",
-bankName:"Khan Bank",accountNo:"5012345678",accountHolder:"444 Prius LLC",
+bankName:"Khan Bank",accountNo:"",accountHolder:"My HOA",
 qpayDesc:"Scan with QPay/SocialPay",installmentDesc:"3-12 month plans",cashDesc:"Pay cash at location",
 fbPage:"Facebook",viewOnFb:"View on Facebook",new:"New",used:"Used",
 login:"Login",logout:"Logout",save:"Save",cancel:"Cancel",delete:"Delete",

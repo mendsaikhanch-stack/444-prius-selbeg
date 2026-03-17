@@ -328,7 +328,7 @@ export default function SettingsTab() {
           </label>
           <input
             className={`w-full px-3 py-2 rounded-lg border text-sm ${inp}`}
-            placeholder="444PriusSelbeg"
+            placeholder="PageName"
             value={BIZ.fbPageId || ""}
             onChange={(e) => setBIZ({ ...BIZ, fbPageId: e.target.value })}
           />
@@ -392,7 +392,7 @@ export default function SettingsTab() {
               </p>
               <p className={txS}>
                 3. {lang === "mn" ? "Нэр" : "Name"}:{" "}
-                <strong>444 Prius Сэлбэг Засвар</strong>
+                <strong>{BIZ.name}</strong>
               </p>
               <p className={txS}>
                 4. {lang === "mn" ? "Ангилал" : "Category"}:{" "}
@@ -502,7 +502,7 @@ export default function SettingsTab() {
                   : "Ad copy template"}
               </p>
               <p className="text-xs whitespace-pre-wrap">
-                {`🔧 444 Prius Сэлбэг Засвар\n✅ Prius 10, 20, 30, 40, Aqua сэлбэг\n✅ Япон ориг, баталгаат\n✅ Hybrid батерей засвар\n💰 Хямд үнэ, хуваан төлөх боломжтой\n📍 ${BIZ.address}\n☎️ ${BIZ.phone}\n🚚 УБ дотор хүргэлттэй`}
+                {`🏢 ${BIZ.name}\n📍 ${BIZ.address}\n☎️ ${BIZ.phone}`}
               </p>
             </div>
           </div>

@@ -101,7 +101,7 @@ export default function ContactPage() {
               allowFullScreen=""
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="444 Prius Сэлбэг Засвар - Байршил"
+              title={`${BIZ.name} - Байршил`}
             />
             <a
               href={BIZ.mapUrl}

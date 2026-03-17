@@ -83,7 +83,7 @@ export default function Footer() {
         </div>
       </div>
       <div className={`border-t ${bd} py-4 text-center text-sm ${txS}`}>
-        © 2026 444 Prius Сэлбэг Засвар
+        © 2026 {BIZ.name}
       </div>
     </footer>
   );

@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 
 const businessSettingsSchema = new mongoose.Schema({
-  name:          { type: String, default: '444 Prius Сэлбэг Засвар' },
-  phone:         { type: String, default: '8911-2722' },
-  phone2:        { type: String, default: '9444-4444' },
-  address:       { type: String, default: 'УБ хот, Энх тайваны өргөн чөлөө' },
+  name:          { type: String, default: 'Манай СӨХ' },
+  phone:         { type: String, default: '7700-0000' },
+  phone2:        { type: String, default: '' },
+  address:       { type: String, default: 'УБ хот' },
   branches:      { type: [{ name: String, phone: String, address: String }], default: [] },
   facebook:      { type: String, default: '' },
   instagram:     { type: String, default: '' },

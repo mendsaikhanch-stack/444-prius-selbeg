@@ -18,7 +18,7 @@ export default function HomePage() {
         <div className="relative w-full">
           <img
             src={BANNER_IMG}
-            alt="444 Prius Сэлбэг Засвар"
+            alt={BIZ.name}
             className="w-full h-auto object-cover"
             style={{ maxHeight: "70vh", width: "100%", objectPosition: "center" }}
           />
@@ -227,7 +227,7 @@ export default function HomePage() {
       {/* FLOATING LOCATION SHARE BUTTON */}
       <a
         href={`sms:${BIZ.phone}?body=${encodeURIComponent(
-          `📍 444 Prius Сэлбэг Засвар\n📌 ${BIZ.address}\n🗺️ ${BIZ.mapUrl}`
+          `📍 ${BIZ.name}\n📌 ${BIZ.address}\n🗺️ ${BIZ.mapUrl}`
         )}`}
         className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-full bg-amber-500 hover:bg-amber-600 text-white font-semibold shadow-lg shadow-amber-500/30 transition-all hover:scale-105"
       >
