@@ -4619,7 +4619,6 @@ function RegisterScreen({ onBack, onSuccess }) {
     </div>
   );
 }
-}
 
 /* ─── MAIN APP ─── */
 export default function SOKHApp() {
