@@ -21,8 +21,8 @@ export const trackPurchase = (total) => {
 };
 
 export const getShareUrl = (product, platform, lang, fmt, BIZ) => {
-  const text = `${lang === "mn" ? product.name.mn : product.name.en} - ${fmt(product.price)} | 444 Prius Сэлбэг | ☎️ ${BIZ.phone}`;
-  const siteUrl = BIZ.facebook || "https://444prius.mn";
+  const text = `${lang === "mn" ? product.name.mn : product.name.en} - ${fmt(product.price)} | ${BIZ.name} | ☎️ ${BIZ.phone}`;
+  const siteUrl = BIZ.facebook || "https://sokh-app.mn";
   const fullText = `🔧 ${text}\n\n✅ Япон ориг сэлбэг\n📍 ${BIZ.address}\n☎️ ${BIZ.phone}\n🌐 ${siteUrl}`;
   if (platform === "facebook") return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(siteUrl)}&quote=${encodeURIComponent(fullText)}`;
   if (platform === "messenger") return `https://www.facebook.com/dialog/send?link=${encodeURIComponent(siteUrl)}&app_id=0&redirect_uri=${encodeURIComponent(siteUrl)}`;

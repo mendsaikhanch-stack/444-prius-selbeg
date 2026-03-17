@@ -80,7 +80,7 @@ export default function ContactPage() {
                 {t.callUs}
               </a>
               <a
-                href="https://m.me/444.prius.selbeg"
+                href={BIZ.facebook ? `https://m.me/${BIZ.facebook.split('/').pop()}` : "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold text-center flex items-center justify-center gap-2"
