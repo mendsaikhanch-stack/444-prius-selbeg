@@ -1,9 +1,16 @@
 import mongoose from 'mongoose';
 
-export default async function connectDB(retries = 5) {
+export default async function connectDB(retries = 3) {
+  mongoose.connection.on('error', (err) => {
+    console.error('MongoDB connection error:', err.message);
+  });
+
   for (let i = 0; i < retries; i++) {
     try {
-      const conn = await mongoose.connect(process.env.MONGODB_URI);
+      const conn = await mongoose.connect(process.env.MONGODB_URI, {
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 5000,
+      });
       console.log(`MongoDB connected: ${conn.connection.host}`);
       return;
     } catch (err) {
