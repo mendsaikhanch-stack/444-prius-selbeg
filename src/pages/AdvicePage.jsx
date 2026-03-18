@@ -1,5 +1,5 @@
 import {
-  Battery, Wrench, Car, Cpu, Filter, Package,
+  Droplets, Wrench, Flame, Zap, DoorOpen, Paintbrush,
   MessageCircle, Camera, Eye, X, Image, Send,
   RefreshCw, Phone, AlertTriangle, CreditCard,
 } from "lucide-react";
@@ -22,10 +22,10 @@ export default function AdvicePage() {
       {/* Quick Tips */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
         {[
-          [Battery, "catBattery", "tipBattery", "text-green-500"],
-          [Wrench, "catEngine", "tipOil", "text-blue-500"],
-          [Car, "catBrake", "tipBrake", "text-red-500"],
-          [Package, "catOil", "tipCoolant", "text-amber-500"],
+          [Droplets, "catPlumbing", "tipPlumbing", "text-green-500"],
+          [Flame, "catHeating", "tipHeating", "text-blue-500"],
+          [Zap, "catElectric", "tipElectric", "text-red-500"],
+          [Paintbrush, "catInterior", "tipVentilation", "text-amber-500"],
         ].map(([Icon, catKey, tipKey, clr], i) => (
           <div key={i} className={`${cd} rounded-xl p-4 border ${bd}`}>
             <Icon size={24} className={`${clr} mb-2`} />
@@ -151,12 +151,12 @@ export default function AdvicePage() {
               const r = {
                 answer:
                   lang === "mn"
-                    ? "Таны тайлбарлаж буй асуудал нь ихэвчлэн " +
+                    ? "Таны тайлбарлаж буй асуудал нь " +
                       adviceModel +
-                      " загварт тохиолддог. Манай мэргэжилтэн шалгаж үзэх шаардлагатай. Компьютер оношлогоо хийлгэхийг зөвлөж байна."
-                    : "Based on your description, this is a common issue with " +
+                      "-д ихэвчлэн тохиолддог. Манай мэргэжилтэн шалгаж үзэх шаардлагатай. Засварчинтай холбогдохыг зөвлөж байна."
+                    : "Based on your description, this is a common issue in " +
                       adviceModel +
-                      ". We recommend a computer diagnostic check with our specialist.",
+                      ". Our specialist needs to inspect it. We recommend contacting our repair team.",
                 cost: adviceModel.includes("30")
                   ? "50,000-200,000₮"
                   : "30,000-150,000₮",
@@ -303,12 +303,12 @@ export default function AdvicePage() {
         <h3 className="font-bold text-lg mb-4">{t.adviceCategories}</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {[
-            [Battery, "catBattery", "text-green-500", "bg-green-50"],
-            [Wrench, "catEngine", "text-blue-500", "bg-blue-50"],
-            [Car, "catBrake", "text-red-500", "bg-red-50"],
-            [Cpu, "catElectric", "text-purple-500", "bg-purple-50"],
-            [Package, "catOil", "text-amber-500", "bg-amber-50"],
-            [Filter, "catSuspension", "text-teal-500", "bg-teal-50"],
+            [Droplets, "catPlumbing", "text-green-500", "bg-green-50"],
+            [Flame, "catHeating", "text-blue-500", "bg-blue-50"],
+            [Zap, "catElectric", "text-red-500", "bg-red-50"],
+            [DoorOpen, "catWindowDoor", "text-purple-500", "bg-purple-50"],
+            [Paintbrush, "catInterior", "text-amber-500", "bg-amber-50"],
+            [Wrench, "catElevator", "text-teal-500", "bg-teal-50"],
           ].map(([Icon, key, clr, bgClr], i) => (
             <button
               key={i}

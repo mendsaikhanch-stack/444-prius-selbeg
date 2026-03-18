@@ -1,4 +1,4 @@
-import { Car, Heart, Share2, Star, Plus } from "lucide-react";
+import { Building, Heart, Share2, Star, Plus } from "lucide-react";
 import useApp from "../hooks/useApp";
 import { models, partCats, LOW_STOCK_THRESHOLD } from "../data/products";
 import { fmt, trackAddToCart } from "../utils/helpers";
@@ -70,7 +70,7 @@ export default function PartsPage({ isHome = false }) {
       </div>
       {filtered.length === 0 ? (
         <div className={`text-center py-16 ${txS}`}>
-          <Car size={48} className="mx-auto mb-3 opacity-30" />
+          <Building size={48} className="mx-auto mb-3 opacity-30" />
           <p className="mb-2">{t.noProducts}</p>
           <button
             onClick={() => {

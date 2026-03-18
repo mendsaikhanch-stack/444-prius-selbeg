@@ -396,7 +396,7 @@ export default function SettingsTab() {
               </p>
               <p className={txS}>
                 4. {lang === "mn" ? "Ангилал" : "Category"}:{" "}
-                <strong>Auto Parts Store</strong>
+                <strong>{lang === "mn" ? "Сууц Өмчлөгчдийн Холбоо" : "Homeowners Association"}</strong>
               </p>
             </div>
             <div className={`p-3 rounded-lg ${aL}`}>

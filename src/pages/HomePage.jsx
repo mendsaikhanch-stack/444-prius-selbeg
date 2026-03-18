@@ -207,9 +207,9 @@ export default function HomePage() {
         <h2 className="text-2xl font-bold mb-6 text-center">{t.whyUs}</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            [Award, t.warranty, "6 сар", "text-green-500"],
+            [Award, t.warranty, "Баталгаатай", "text-green-500"],
             [Truck, t.fastService, "Дуудлагаар", "text-blue-500"],
-            [Shield, t.originalParts, "Япон ориг", "text-amber-500"],
+            [Shield, t.originalParts, "Чанартай", "text-amber-500"],
             [Wrench, t.experienced, "10+ жил", "text-purple-500"],
           ].map(([I, title, sub, clr], i) => (
             <div
