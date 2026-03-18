@@ -82,9 +82,9 @@ export default function ShareModal({ product, onClose }) {
         </div>
         <button
           onClick={() => {
-            const text = `🔧 ${
+            const text = `🏠 ${
               lang === "mn" ? product.name.mn : product.name.en
-            } - ${fmt(product.price)}\n✅ Япон ориг сэлбэг\n📍 ${
+            } - ${fmt(product.price)}\n✅ СӨХ үйлчилгээ\n📍 ${
               BIZ.address
             }\n☎️ ${BIZ.phone}`;
             navigator.clipboard?.writeText(text);

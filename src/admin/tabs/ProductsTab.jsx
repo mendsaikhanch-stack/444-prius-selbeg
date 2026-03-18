@@ -8,8 +8,8 @@ import * as api from "../../api/client";
 const emptyProduct = {
   name: { mn: "", en: "" },
   price: 0,
-  model: "Prius 20",
-  cat: "Мотор",
+  model: "1-р байр",
+  cat: "Сантехник",
   rating: 0,
   stock: 0,
   cond: "new",

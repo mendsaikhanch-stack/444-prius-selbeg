@@ -4,12 +4,12 @@ export default function GalleryPage() {
   const { cd, bd, aL, t, SOCIALS } = useApp();
 
   const gallery = [
-    { img: "https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=600&h=400&fit=crop", c: "Hybrid батерей засвар" },
-    { img: "https://images.unsplash.com/photo-1580894894513-541e068a3e2b?w=600&h=400&fit=crop", c: "Мотор 1NZ-FXE" },
-    { img: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=600&h=400&fit=crop", c: "Prius 30 урд гупер" },
-    { img: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&h=400&fit=crop", c: "Явах эд анги" },
-    { img: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&h=400&fit=crop", c: "LED фара" },
-    { img: "https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=600&h=400&fit=crop", c: "Тоормосны систем" },
+    { img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop", c: "Орон сууцны засвар" },
+    { img: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=400&fit=crop", c: "Цахилгааны засвар" },
+    { img: "https://images.unsplash.com/photo-1585687433141-4c3d63670488?w=600&h=400&fit=crop", c: "Сантехникийн ажил" },
+    { img: "https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=600&h=400&fit=crop", c: "Тохижилт" },
+    { img: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&h=400&fit=crop", c: "Гэрэлтүүлэг" },
+    { img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop", c: "Орон сууц" },
   ];
 
   return (
