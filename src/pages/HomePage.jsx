@@ -1,14 +1,12 @@
-import { Phone, Zap, Award, Truck, Shield, Wrench, MapPin } from "lucide-react";
+import { Phone, Award, Truck, Shield, Wrench, MapPin } from "lucide-react";
 import useApp from "../hooks/useApp";
 import ShieldLogo from "../components/ui/ShieldLogo";
 import { BANNER_IMG } from "../assets/banner";
-import { fmt } from "../utils/helpers";
 
 export default function HomePage() {
   const {
     dark, cd, bd, txS, aL, lang, t,
-    products, navTo, setShowProductModal, setModalQty,
-    SOCIALS, BIZ,
+    navTo, SOCIALS, BIZ,
   } = useApp();
 
   return (
@@ -36,16 +34,16 @@ export default function HomePage() {
           </div>
           <div className="flex flex-wrap gap-3 justify-center mb-4">
             <button
-              onClick={() => navTo("parts")}
+              onClick={() => navTo("services")}
               className="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-lg shadow-lg shadow-amber-500/25"
             >
               {t.shopNow} →
             </button>
             <button
-              onClick={() => navTo("services")}
+              onClick={() => navTo("advice")}
               className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 font-semibold backdrop-blur"
             >
-              {t.bookService}
+              {t.advice}
             </button>
             <a
               href={`tel:${BIZ.phone}`}
@@ -73,135 +71,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* NEW ARRIVALS */}
-      <section
-        className="relative"
-        style={{
-          background: "linear-gradient(180deg, #1a1a2e 0%, #16213e 100%)",
-        }}
-      >
-        <div
-          style={{
-            width: "min(980px, 100%)",
-            margin: "0 auto",
-            padding: "20px 16px 28px",
-          }}
-        >
-          <div
-            style={{
-              color: "rgba(255,255,255,.92)",
-              fontWeight: 800,
-              marginBottom: 12,
-              fontSize: 20,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            <Zap size={20} className="text-amber-400" />
-            {lang === "mn" ? "Шинэ ирсэн" : "New Arrivals"}
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, minmax(0,1fr))",
-              gap: 10,
-            }}
-            className="max-md:!grid-cols-2"
-            id="newArrivalsGrid"
-          >
-            {products.slice(0, 6).map((p) => (
-              <div
-                key={p._id || p.id}
-                onClick={() => {
-                  setShowProductModal(p);
-                  setModalQty(1);
-                }}
-                style={{
-                  display: "block",
-                  textDecoration: "none",
-                  borderRadius: 14,
-                  overflow: "hidden",
-                  background: "rgba(0,0,0,.45)",
-                  border: "1px solid rgba(245,196,75,.35)",
-                  backdropFilter: "blur(6px)",
-                  cursor: "pointer",
-                  transition: "transform 0.2s, border-color 0.2s",
-                }}
-                className="hover:scale-105 hover:border-amber-400"
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.borderColor =
-                    "rgba(245,196,75,.8)")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.borderColor =
-                    "rgba(245,196,75,.35)")
-                }
-              >
-                {p.img && p.img.startsWith("http") ? (
-                  <img
-                    src={p.img}
-                    alt={lang === "mn" ? p.name.mn : p.name.en}
-                    loading="lazy"
-                    style={{
-                      width: "100%",
-                      height: 110,
-                      objectFit: "cover",
-                      display: "block",
-                    }}
-                  />
-                ) : (
-                  <div
-                    style={{
-                      width: "100%",
-                      height: 110,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 40,
-                      background: "rgba(245,158,11,0.1)",
-                    }}
-                  >
-                    {p.emoji || "📦"}
-                  </div>
-                )}
-                <div
-                  style={{
-                    padding: "10px 10px 0",
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: 13,
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {lang === "mn" ? p.name.mn : p.name.en}
-                </div>
-                <div
-                  style={{
-                    padding: "4px 10px 2px",
-                    color: "rgba(255,255,255,0.5)",
-                    fontSize: 11,
-                  }}
-                >
-                  {p.model}
-                </div>
-                <div
-                  style={{
-                    padding: "2px 10px 10px",
-                    color: "#f5c44b",
-                    fontWeight: 800,
-                    fontSize: 13,
-                  }}
-                >
-                  {fmt(p.price)}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <style>{`@media(max-width:720px){#newArrivalsGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}`}</style>
-      </section>
-
       {/* WHY US */}
       <section className="max-w-7xl mx-auto px-4 py-12">
         <h2 className="text-2xl font-bold mb-6 text-center">{t.whyUs}</h2>
@@ -209,7 +78,7 @@ export default function HomePage() {
           {[
             [Award, t.warranty, "Баталгаатай", "text-green-500"],
             [Truck, t.fastService, "Дуудлагаар", "text-blue-500"],
-            [Shield, t.originalParts, "Чанартай", "text-amber-500"],
+            [Shield, t.quality, "Чанартай", "text-amber-500"],
             [Wrench, t.experienced, "10+ жил", "text-purple-500"],
           ].map(([I, title, sub, clr], i) => (
             <div

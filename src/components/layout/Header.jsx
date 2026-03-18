@@ -1,14 +1,11 @@
-import {
-  ShoppingCart, Sun, Moon, Search, Menu, LogOut,
-} from "lucide-react";
+import { Sun, Moon, Menu, LogOut } from "lucide-react";
 import useApp from "../../hooks/useApp";
 import ShieldLogo from "../ui/ShieldLogo";
 
 export default function Header() {
   const {
-    dark, setDark, lang, setLang, page, hdr, bd, txS, inp, aL,
-    searchQ, setSearchQ, setPage, navTo,
-    cartCount, setShowCart, setShowAuth, setAdminView, setMobileMenu,
+    dark, setDark, lang, setLang, page, hdr, bd, txS, aL,
+    navTo, setShowAuth, setAdminView, setMobileMenu,
     user, logoutUser, SOCIALS, t,
   } = useApp();
 
@@ -24,7 +21,6 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-5">
           {[
             ["home", t.home],
-            ["parts", t.parts],
             ["services", t.services],
             ["gallery", t.gallery],
             ["advice", t.advice],
@@ -41,22 +37,6 @@ export default function Header() {
             </button>
           ))}
         </nav>
-        <div className="hidden md:flex items-center gap-2 flex-1 max-w-xs mx-4">
-          <div
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border w-full ${inp}`}
-          >
-            <Search size={15} className={txS} />
-            <input
-              className="bg-transparent outline-none text-sm w-full"
-              placeholder={t.search}
-              value={searchQ}
-              onChange={(e) => {
-                setSearchQ(e.target.value);
-                setPage("parts");
-              }}
-            />
-          </div>
-        </div>
         <div className="flex items-center gap-1.5">
           <div className="hidden lg:flex gap-1">
             {SOCIALS.map((s) => (
@@ -84,17 +64,6 @@ export default function Header() {
             className={`px-2 py-1 rounded text-xs font-medium ${aL} text-amber-500`}
           >
             {lang === "mn" ? "EN" : "MN"}
-          </button>
-          <button
-            onClick={() => setShowCart(true)}
-            className="p-2 rounded-lg relative"
-          >
-            <ShoppingCart size={18} />
-            {cartCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 bg-amber-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                {cartCount}
-              </span>
-            )}
           </button>
           {user ? (
             <>

@@ -4,7 +4,8 @@ import {
   RefreshCw, Phone, AlertTriangle, CreditCard,
 } from "lucide-react";
 import useApp from "../hooks/useApp";
-import { models } from "../data/products";
+
+const buildings = ["1-р байр", "2-р байр", "3-р байр", "4-р байр", "5-р байр"];
 
 export default function AdvicePage() {
   const {
@@ -47,7 +48,7 @@ export default function AdvicePage() {
             {t.selectModel}
           </label>
           <div className="flex flex-wrap gap-2">
-            {models.map((m) => (
+            {buildings.map((m) => (
               <button
                 key={m}
                 onClick={() => setAdviceModel(m)}

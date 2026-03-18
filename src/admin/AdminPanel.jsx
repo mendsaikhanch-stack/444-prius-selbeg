@@ -1,23 +1,16 @@
 import {
-  Sun, Moon, Bell, BarChart3, Globe, Timer, Package,
-  ClipboardList, AlertTriangle, Settings,
+  Sun, Moon, BarChart3, Globe, Settings,
 } from "lucide-react";
 import useApp from "../hooks/useApp";
 import ShieldLogo from "../components/ui/ShieldLogo";
-import NotifsDropdown from "../components/ui/NotifsDropdown";
 import OverviewTab from "./tabs/OverviewTab";
 import SocialTab from "./tabs/SocialTab";
-import SchedulerTab from "./tabs/SchedulerTab";
-import ProductsTab from "./tabs/ProductsTab";
-import OrdersTab from "./tabs/OrdersTab";
-import AlertsTab from "./tabs/AlertsTab";
 import SettingsTab from "./tabs/SettingsTab";
 
 export default function AdminPanel() {
   const {
     dark, setDark, lang, setLang, bg, tx, hdr, bd, cd, txS, aL, t,
-    adminTab, setAdminTab, stockAlerts,
-    showNotifs, setShowNotifs, unreadCount, setAdminView,
+    adminTab, setAdminTab, setAdminView,
   } = useApp();
 
   return (
@@ -36,20 +29,6 @@ export default function AdminPanel() {
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="relative">
-            <button
-              onClick={() => setShowNotifs(!showNotifs)}
-              className={`p-2 rounded-lg ${cd} relative`}
-            >
-              <Bell size={16} />
-              {unreadCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
-                  {unreadCount}
-                </span>
-              )}
-            </button>
-            {showNotifs && <NotifsDropdown />}
-          </div>
           <button
             onClick={() => setDark(!dark)}
             className={`p-2 rounded-lg ${cd}`}
@@ -66,7 +45,7 @@ export default function AdminPanel() {
             onClick={() => setAdminView(false)}
             className="px-3 py-1.5 rounded-lg text-sm bg-amber-500 text-white"
           >
-            {t.backToShop}
+            {lang === "mn" ? "Буцах" : "Back"}
           </button>
         </div>
       </header>
@@ -76,11 +55,7 @@ export default function AdminPanel() {
         >
           {[
             ["overview", BarChart3, t.overview],
-            ["social", Globe, t.socialDashboard],
-            ["scheduler", Timer, t.scheduler],
-            ["products", Package, t.productMgmt],
-            ["orders", ClipboardList, t.orderMgmt],
-            ["alerts", AlertTriangle, t.stockAlerts],
+            ["social", Globe, lang === "mn" ? "Social удирдлага" : "Social Dashboard"],
             ["settings", Settings, t.settings],
           ].map(([k, I, l]) => (
             <button
@@ -94,26 +69,16 @@ export default function AdminPanel() {
             >
               <I size={17} />
               {l}
-              {k === "alerts" && stockAlerts.length > 0 && (
-                <span className="ml-auto bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                  {stockAlerts.length}
-                </span>
-              )}
             </button>
           ))}
         </aside>
-        {/* Mobile admin tabs */}
         <div
           className={`md:hidden flex overflow-x-auto border-b ${bd} ${cd} w-full`}
         >
           {[
             ["overview", t.overview],
             ["social", "Social"],
-            ["scheduler", t.scheduler],
-            ["products", t.productMgmt],
-            ["orders", t.orderMgmt],
-            ["alerts", "⚠️"],
-            ["settings", "⚙️"],
+            ["settings", t.settings],
           ].map(([k, l]) => (
             <button
               key={k}
@@ -131,10 +96,6 @@ export default function AdminPanel() {
         <main className="flex-1 p-4 md:p-6">
           {adminTab === "overview" && <OverviewTab />}
           {adminTab === "social" && <SocialTab />}
-          {adminTab === "scheduler" && <SchedulerTab />}
-          {adminTab === "products" && <ProductsTab />}
-          {adminTab === "orders" && <OrdersTab />}
-          {adminTab === "alerts" && <AlertsTab />}
           {adminTab === "settings" && <SettingsTab />}
         </main>
       </div>

@@ -1,11 +1,10 @@
-import { X, Search, Phone } from "lucide-react";
+import { X, Phone } from "lucide-react";
 import useApp from "../../hooks/useApp";
 
 export default function MobileMenu() {
   const {
-    cd, bd, inp, aL, txS, page, lang, t,
-    searchQ, setSearchQ, navTo,
-    setShowAuth, setMobileMenu, user, SOCIALS, BIZ,
+    cd, bd, aL, page, t,
+    navTo, setShowAuth, setMobileMenu, user, SOCIALS, BIZ,
   } = useApp();
 
   return (
@@ -22,23 +21,8 @@ export default function MobileMenu() {
           <X size={20} />
         </button>
         <div className="mt-10 space-y-2">
-          <div
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${inp}`}
-          >
-            <Search size={15} />
-            <input
-              className="bg-transparent outline-none text-sm w-full"
-              placeholder={t.search}
-              value={searchQ}
-              onChange={(e) => {
-                setSearchQ(e.target.value);
-                navTo("parts");
-              }}
-            />
-          </div>
           {[
             ["home", t.home],
-            ["parts", t.parts],
             ["services", t.services],
             ["gallery", t.gallery],
             ["advice", t.advice],

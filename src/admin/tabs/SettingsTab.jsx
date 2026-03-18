@@ -353,8 +353,8 @@ export default function SettingsTab() {
           </div>
           <p className={`text-xs ${txS}`}>
             {lang === "mn"
-              ? "Pixel нь: AddToCart, Purchase event илгээнэ"
-              : "Pixel tracks: AddToCart, Purchase events"}
+              ? "Pixel нь: PageView event илгээнэ"
+              : "Pixel tracks: PageView events"}
           </p>
         </div>
 

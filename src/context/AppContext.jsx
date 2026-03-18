@@ -1,34 +1,7 @@
-import { createContext, useState, useReducer, useEffect, useCallback } from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 import { T } from "../data/translations";
-import { initProducts, LOW_STOCK_THRESHOLD } from "../data/products";
-import { mockOrders } from "../data/orders";
 import { DEFAULT_BIZ, getSOCIALS } from "../data/business";
-import { initScheduledPosts } from "../data/scheduledPosts";
-import { fmt } from "../utils/helpers";
 import * as api from "../api/client";
-
-function cartR(s, a) {
-  switch (a.type) {
-    case "ADD": {
-      const e = s.find((i) => i.id === a.p.id || i._id === a.p._id);
-      return e
-        ? s.map((i) => ((i.id === a.p.id || i._id === a.p._id) ? { ...i, qty: i.qty + a.q } : i))
-        : [...s, { ...a.p, qty: a.q }];
-    }
-    case "REMOVE":
-      return s.filter((_, i) => i !== a.i);
-    case "INC":
-      return s.map((x, i) => (i === a.i ? { ...x, qty: x.qty + 1 } : x));
-    case "DEC":
-      return s.map((x, i) =>
-        i === a.i ? { ...x, qty: Math.max(1, x.qty - 1) } : x
-      );
-    case "CLEAR":
-      return [];
-    default:
-      return s;
-  }
-}
 
 export const AppContext = createContext(null);
 
@@ -37,43 +10,11 @@ export function AppProvider({ children }) {
   const [lang, setLang] = useState("mn");
   const [page, setPage] = useState("home");
   const [mobileMenu, setMobileMenu] = useState(false);
-  const [showCart, setShowCart] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
-  const [showProductModal, setShowProductModal] = useState(null);
-  const [cart, dc] = useReducer(cartR, []);
-  const [wishIds, setWishIds] = useState([]);
   const [toasts, setToasts] = useState([]);
-  const [products, setProducts] = useState(initProducts);
-  const [searchQ, setSearchQ] = useState("");
-  const [selModel, setSelModel] = useState(null);
-  const [selCat, setSelCat] = useState(null);
-  const [sortBy, setSortBy] = useState("default");
   const [user, setUser] = useState(null);
   const [adminView, setAdminView] = useState(false);
   const [adminTab, setAdminTab] = useState("overview");
-  const [orders, setOrders] = useState(mockOrders);
-  const [checkoutStep, setCheckoutStep] = useState(0);
-  const [showCheckout, setShowCheckout] = useState(false);
-  const [payMethod, setPayMethod] = useState("qpay");
-  const [deliveryMethod, setDeliveryMethod] = useState("ub");
-  const [deliveryForm, setDeliveryForm] = useState({
-    district: "",
-    khoroo: "",
-    building: "",
-    apartment: "",
-    note: "",
-    phone2: "",
-  });
-  const [modalQty, setModalQty] = useState(1);
-  const [checkoutForm, setCheckoutForm] = useState({
-    name: "",
-    phone: "",
-    address: "",
-  });
-  const [schedulerOn, setSchedulerOn] = useState(true);
-  const [scheduledPosts, setScheduledPosts] = useState(initScheduledPosts);
-  const [stockAlerts, setStockAlerts] = useState([]);
-  const [showShareModal, setShowShareModal] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [showNotifs, setShowNotifs] = useState(false);
   const [BIZ, setBIZ] = useState(DEFAULT_BIZ);
@@ -87,7 +28,7 @@ export function AppProvider({ children }) {
   const [adviceHistory, setAdviceHistory] = useState([
     {
       id: 1,
-      model: "Орон сууц",
+      model: "1-р байр",
       question: "Халаалт муу ажиллаж байна, юу хийх вэ?",
       answer:
         "Радиаторын агаар гаргах хэрэгтэй. Агаар хангалттай гарсан бол халаалтын шугамын даралт шалгах хэрэгтэй.",
@@ -98,7 +39,7 @@ export function AppProvider({ children }) {
     },
     {
       id: 2,
-      model: "Орон сууц",
+      model: "2-р байр",
       question: "Цахилгааны утас хуучирсан, солих уу?",
       answer:
         "Хуучин утас аюулгүй байдлын шаардлага хангахгүй бол солих хэрэгтэй. Мэргэжлийн цахилгаанчин дуудаж шалгуулаарай.",
@@ -109,7 +50,7 @@ export function AppProvider({ children }) {
     },
     {
       id: 3,
-      model: "Орон сууц",
+      model: "3-р байр",
       question: "Усны хоолой алдаж байна",
       answer:
         "Хоолойн холболтыг шалгаж, хэрэгтэй бол сантехникч дуудна уу. Түр зуур усны голын вентиль хаагаарай.",
@@ -122,28 +63,6 @@ export function AppProvider({ children }) {
 
   // --- API data loading on mount ---
   useEffect(() => {
-    // Load products from API
-    api.fetchProducts()
-      .then((data) => {
-        setProducts(data);
-        const lowStock = data.filter((p) => p.stock <= LOW_STOCK_THRESHOLD && p.stock > 0);
-        setStockAlerts(lowStock);
-        setNotifications(
-          data
-            .filter((p) => p.stock <= LOW_STOCK_THRESHOLD)
-            .map((p, i) => ({ id: i, product: p, read: false, time: "Өнөөдөр" }))
-        );
-      })
-      .catch(() => {
-        // Fallback to mock data
-        setStockAlerts(initProducts.filter((p) => p.stock <= LOW_STOCK_THRESHOLD && p.stock > 0));
-        setNotifications(
-          initProducts
-            .filter((p) => p.stock <= LOW_STOCK_THRESHOLD)
-            .map((p, i) => ({ id: i, product: p, read: false, time: "Өнөөдөр" }))
-        );
-      });
-
     // Load settings from API
     api.fetchSettings()
       .then((data) => { if (data && data.name) setBIZ(data); })
@@ -179,52 +98,13 @@ export function AppProvider({ children }) {
     setAdminView(false);
   }, []);
 
-  const placeOrderAPI = useCallback(async (orderData) => {
-    const order = await api.placeOrder(orderData);
-    return order;
-  }, []);
-
-  const fetchOrdersAPI = useCallback(async () => {
-    const data = await api.fetchOrders();
-    setOrders(data);
-    return data;
-  }, []);
-
-  const updateOrderStatusAPI = useCallback(async (id, status) => {
-    const updated = await api.updateOrderStatus(id, status);
-    setOrders((prev) => prev.map((o) => (o._id === id ? updated : o)));
-    return updated;
-  }, []);
-
   const saveSettingsAPI = useCallback(async (settings) => {
     const saved = await api.saveSettings(settings);
     setBIZ(saved);
     return saved;
   }, []);
 
-  const refreshProducts = useCallback(async () => {
-    const data = await api.fetchProducts();
-    setProducts(data);
-    return data;
-  }, []);
-
   const t = T[lang];
-  const cartTotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const cartCount = cart.reduce((s, i) => s + i.qty, 0);
-  const deliveryFee =
-    deliveryMethod === "pickup"
-      ? 0
-      : deliveryMethod === "express"
-      ? 15000
-      : deliveryMethod === "province"
-      ? 15000
-      : deliveryMethod === "courier"
-      ? 20000
-      : cartTotal >= 100000
-      ? 0
-      : 5000;
-  const grandTotal = cartTotal + deliveryFee;
-  const unreadCount = notifications.filter((n) => !n.read).length;
 
   useEffect(() => {
     document.title = t.brand;
@@ -269,30 +149,9 @@ export function AppProvider({ children }) {
 
   const navTo = (p) => {
     setPage(p);
-    setShowCheckout(false);
     setMobileMenu(false);
     window.scrollTo(0, 0);
   };
-
-  const filtered = products
-    .filter((p) => {
-      const n = lang === "mn" ? p.name.mn : p.name.en;
-      return (
-        n.toLowerCase().includes(searchQ.toLowerCase()) &&
-        (!selModel || p.model === selModel) &&
-        (!selCat || p.cat === selCat)
-      );
-    })
-    .sort((a, b) => {
-      if (sortBy === "priceLow") return a.price - b.price;
-      if (sortBy === "priceHigh") return b.price - a.price;
-      if (sortBy === "rating") return b.rating - a.rating;
-      if (sortBy === "name")
-        return (lang === "mn" ? a.name.mn : a.name.en).localeCompare(
-          lang === "mn" ? b.name.mn : b.name.en
-        );
-      return 0;
-    });
 
   // Style helpers
   const bg = dark ? "bg-gray-900" : "bg-gray-50";
@@ -310,30 +169,20 @@ export function AppProvider({ children }) {
 
   const value = {
     dark, setDark, lang, setLang, page, setPage,
-    mobileMenu, setMobileMenu, showCart, setShowCart,
-    showAuth, setShowAuth, showProductModal, setShowProductModal,
-    cart, dc, wishIds, setWishIds, toasts, setToasts,
-    products, setProducts, searchQ, setSearchQ, selModel, setSelModel,
-    selCat, setSelCat, sortBy, setSortBy,
+    mobileMenu, setMobileMenu,
+    showAuth, setShowAuth,
+    toasts, setToasts,
     user, setUser, adminView, setAdminView, adminTab, setAdminTab,
-    orders, setOrders, checkoutStep, setCheckoutStep,
-    showCheckout, setShowCheckout, payMethod, setPayMethod,
-    deliveryMethod, setDeliveryMethod, deliveryForm, setDeliveryForm,
-    modalQty, setModalQty, checkoutForm, setCheckoutForm,
-    schedulerOn, setSchedulerOn, scheduledPosts, setScheduledPosts,
-    stockAlerts, showShareModal, setShowShareModal,
     notifications, setNotifications, showNotifs, setShowNotifs,
     BIZ, setBIZ, SOCIALS,
     adviceModel, setAdviceModel, adviceText, setAdviceText,
     adviceFiles, setAdviceFiles, adviceLoading, setAdviceLoading,
     adviceHistory, setAdviceHistory,
-    t, cartTotal, cartCount, deliveryFee, grandTotal, unreadCount,
-    fmt, addToast, navTo, filtered,
+    t, addToast, navTo,
     bg, tx, txS, cd, bd, inp, hdr, aL,
     // API action helpers
     loginUser, registerUser, logoutUser,
-    placeOrderAPI, fetchOrdersAPI, updateOrderStatusAPI,
-    saveSettingsAPI, refreshProducts,
+    saveSettingsAPI,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
