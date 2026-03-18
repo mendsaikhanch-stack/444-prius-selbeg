@@ -1,6 +1,6 @@
-import Header from "@/components/Header";
+import Header from "../../../components/Header";
 import Link from "next/link";
-import { getArticle } from "@/lib/api";
+import { getArticle } from "../../../lib/api";
 
 export default async function ArticlePage({ params }) {
   const { id } = await params;

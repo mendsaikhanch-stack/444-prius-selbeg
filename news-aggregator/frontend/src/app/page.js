@@ -1,7 +1,7 @@
-import Header from "@/components/Header";
-import SearchBar from "@/components/SearchBar";
-import ArticleCard from "@/components/ArticleCard";
-import { getArticles } from "@/lib/api";
+import Header from "../components/Header";
+import SearchBar from "../components/SearchBar";
+import ArticleCard from "../components/ArticleCard";
+import { getArticles } from "../lib/api";
 
 export default async function HomePage({ searchParams }) {
   const params = await searchParams;
