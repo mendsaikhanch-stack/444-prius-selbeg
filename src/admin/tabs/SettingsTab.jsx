@@ -482,8 +482,8 @@ export default function SettingsTab() {
               <p className={txS}>
                 3.{" "}
                 {lang === "mn"
-                  ? "Зорилтот бүлэг: 25-55 нас, УБ, машинтай"
-                  : "Target: 25-55 age, UB, car owners"}
+                  ? "Зорилтот бүлэг: 25-55 нас, УБ, орон сууцтай"
+                  : "Target: 25-55 age, UB, apartment owners"}
               </p>
               <p className={txS}>
                 4.{" "}
