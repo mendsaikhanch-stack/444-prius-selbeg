@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 
-const CATEGORIES = ["Дэлхий", "Технологи", "Спорт", "Бизнес"];
+const CATEGORIES = ["Монгол", "Дэлхий", "Технологи", "Спорт", "Бизнес"];
 
 export default function CategoryFilter() {
   const router = useRouter();

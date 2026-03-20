@@ -4,6 +4,9 @@ from app.models.article import Article
 
 # MVP: Зөвхөн RSS feed-ээс мэдээ татах
 DEFAULT_FEEDS = [
+    # Монгол мэдээ
+    {"url": "https://ikon.mn/rss", "source": "iKon.mn", "category": "Монгол"},
+    # Олон улсын мэдээ
     {"url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml", "source": "NY Times", "category": "Дэлхий"},
     {"url": "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml", "source": "NY Times", "category": "Технологи"},
     {"url": "https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml", "source": "NY Times", "category": "Спорт"},
