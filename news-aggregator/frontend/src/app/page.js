@@ -1,15 +1,17 @@
 import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
+import CategoryFilter from "../components/CategoryFilter";
 import ArticleCard from "../components/ArticleCard";
 import { getArticles } from "../lib/api";
 
 export default async function HomePage({ searchParams }) {
   const params = await searchParams;
   const search = params?.search || "";
+  const category = params?.category || "";
   let articles = [];
 
   try {
-    articles = await getArticles({ search });
+    articles = await getArticles({ search, category });
   } catch {
     // Backend холбогдоогүй бол хоосон жагсаалт
   }
@@ -20,6 +22,9 @@ export default async function HomePage({ searchParams }) {
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex justify-center mb-8">
           <SearchBar />
+        </div>
+        <div className="flex justify-center mb-6">
+          <CategoryFilter />
         </div>
 
         {articles.length === 0 ? (

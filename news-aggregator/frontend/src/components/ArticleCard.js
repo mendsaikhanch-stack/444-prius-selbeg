@@ -11,10 +11,15 @@ export default function ArticleCard({ article }) {
             className="w-full h-48 object-cover rounded-md mb-3"
           />
         )}
-        <div className="flex items-center gap-2 mb-2">
+        <div className="flex items-center gap-2 mb-2 flex-wrap">
           <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
             {article.source}
           </span>
+          {article.category && (
+            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded">
+              {article.category}
+            </span>
+          )}
           {article.published_at && (
             <span className="text-xs text-gray-400">
               {new Date(article.published_at).toLocaleDateString("mn-MN")}

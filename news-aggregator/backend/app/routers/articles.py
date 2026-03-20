@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
-from sqlalchemy import desc
+from sqlalchemy import desc, distinct
 from app.database import get_db
 from app.models.article import Article
 from app.services.scraper import fetch_all_feeds
@@ -29,6 +29,13 @@ def get_articles(
     return articles
 
 
+@router.get("/categories")
+def get_categories(db: Session = Depends(get_db)):
+    """Бүх категориудын жагсаалт авах."""
+    categories = db.query(distinct(Article.category)).filter(Article.category.isnot(None)).all()
+    return [c[0] for c in categories]
+
+
 @router.get("/{article_id}")
 def get_article(article_id: int, db: Session = Depends(get_db)):
     """Нэг мэдээний дэлгэрэнгүй авах."""
@@ -55,6 +62,7 @@ def fetch_articles(db: Session = Depends(get_db)):
             title=data["title"],
             url=data["url"],
             source=data["source"],
+            category=data.get("category"),
             summary=data.get("summary"),
             ai_summary=ai_summary,
             image_url=data.get("image_url"),

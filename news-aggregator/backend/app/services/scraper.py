@@ -4,13 +4,19 @@ from app.models.article import Article
 
 # MVP: Зөвхөн RSS feed-ээс мэдээ татах
 DEFAULT_FEEDS = [
-    {"url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml", "source": "NY Times"},
-    {"url": "https://feeds.bbci.co.uk/news/world/rss.xml", "source": "BBC News"},
-    {"url": "https://www.theguardian.com/world/rss", "source": "The Guardian"},
+    {"url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml", "source": "NY Times", "category": "Дэлхий"},
+    {"url": "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml", "source": "NY Times", "category": "Технологи"},
+    {"url": "https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml", "source": "NY Times", "category": "Спорт"},
+    {"url": "https://feeds.bbci.co.uk/news/world/rss.xml", "source": "BBC News", "category": "Дэлхий"},
+    {"url": "https://feeds.bbci.co.uk/news/technology/rss.xml", "source": "BBC News", "category": "Технологи"},
+    {"url": "https://feeds.bbci.co.uk/news/business/rss.xml", "source": "BBC News", "category": "Бизнес"},
+    {"url": "https://www.theguardian.com/world/rss", "source": "The Guardian", "category": "Дэлхий"},
+    {"url": "https://www.theguardian.com/technology/rss", "source": "The Guardian", "category": "Технологи"},
+    {"url": "https://www.theguardian.com/sport/rss", "source": "The Guardian", "category": "Спорт"},
 ]
 
 
-def parse_feed(feed_url: str, source: str) -> list[dict]:
+def parse_feed(feed_url: str, source: str, category: str = None) -> list[dict]:
     """RSS feed-ээс мэдээнүүдийг задлах."""
     feed = feedparser.parse(feed_url)
     articles = []
@@ -30,6 +36,7 @@ def parse_feed(feed_url: str, source: str) -> list[dict]:
             "title": entry.get("title", ""),
             "url": entry.get("link", ""),
             "source": source,
+            "category": category,
             "summary": entry.get("summary", ""),
             "image_url": image_url,
             "published_at": published,
@@ -43,7 +50,7 @@ def fetch_all_feeds() -> list[dict]:
     all_articles = []
     for feed in DEFAULT_FEEDS:
         try:
-            articles = parse_feed(feed["url"], feed["source"])
+            articles = parse_feed(feed["url"], feed["source"], feed.get("category"))
             all_articles.extend(articles)
         except Exception as e:
             print(f"Feed алдаа ({feed['source']}): {e}")
